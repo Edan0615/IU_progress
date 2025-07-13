@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edan's 學習進度追蹤系統</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: 'Microsoft JhengHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      border-bottom: 2px solid #ffc107;
+      padding-bottom: 0.5rem;
+      color: #856404;
+    }
+    .card {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 1rem;
+    }
+    .note-box {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 10px 15px;
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+      font-style: italic;
+      color: #856404;
+    }
+    .course-item {
+      cursor: grab;
+      user-select: none;
+      padding: 8px 12px;
+      border-radius: 0.5rem;
+      margin-bottom: 6px;
+      transition: all 0.3s ease;
+      border-left: 5px solid transparent;
+      background-color: white;
+    }
+    .course-item.completed {
+      background-color: #fff3cd;
+      color: #856404;
+      font-weight: 600;
+      border-left: 5px solid #ffc107;
+    }
+    .course-item:hover {
+      background-color: #ffe8a1;
+    }
+    .course-item.dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+    .category-section {
+      min-height: 50px;
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-radius: 0.5rem;
+      margin-bottom: 20px;
+      border: 1px dashed #adb5bd;
+    }
+    .category-section.highlight {
+      background-color: #ffe8a1;
+    }
+    .reset-btn {
+      margin-top: 10px;
+    }
+    .courses-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .category-credits {
+      background-color: #ffc107;
+      color: #856404;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .category-0 { border-left: 4px solid #28a745; }
+    .category-1 { border-left: 4px solid #17a2b8; }
+    .category-2 { border-left: 4px solid #007bff; }
+    .category-3 { border-left: 4px solid #6c757d; }
+    .category-4 { border-left: 4px solid #ffc107; }
+    .category-5 { border-left: 4px solid #fd7e14; }
+    .category-6 { border-left: 4px solid #dc3545; }
+    .category-7 { border-left: 4px solid #6f42c1; }
+    .category-8 { border-left: 4px solid #20c997; }
+    
+    @media (min-width: 1200px) {
+      .courses-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 1199px) and (min-width: 768px) {
+      .courses-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <h1 class="text-center mb-4 text-warning">📘 Edan's 學習進度追蹤系統</h1>
+
+    <!-- 進度條 -->
+    <div class="card p-4 mb-4">
+      <h2 class="section-title">🎯 學位進度 (總需 180 學分)</h2>
+      <div class="progress" style="height: 30px;">
+        <div id="degreeProgressBar" 
+             class="progress-bar progress-bar-striped progress-bar-animated bg-warning" 
+             role="progressbar" 
+             style="width: 0%"
+             aria-valuenow="0" aria-valuemin="0" aria-valuemax="180">
+          0 / 180 學分
+        </div>
+      </div>
+      <small class="text-muted mt-2 d-block">拖曳課程到「已完成」區域來更新進度</small>
+      <button id="resetProgress" class="btn btn-sm btn-outline-danger reset-btn">重設所有進度</button>
+      <button id="exportData" class="btn btn-sm btn-outline-primary ms-2">匯出資料</button>
+      <button id="importData" class="btn btn-sm btn-outline-success ms-2">匯入資料</button>
+      <input type="file" id="fileInput" style="display: none;" accept=".json">
+    </div>
+
+    <!-- 課程區塊 -->
+    <div class="card p-4 mb-4">
+      <h2 class="section-title">📚 課程進度管理 (拖曳重新分類)</h2>
+      <div id="coursesByCategory" class="courses-container"></div>
+
+      <h5>注意事項:</h5>
+      <ul>
+        <li>總學分需求: <strong>180 學分</strong></li>
+        <li>一般課程: 通常 <strong>5 學分/門</strong></li>
+        <li>選修課程: 需完成4門，通常5學分/門 (共20學分)</li>
+        <li>畢業論文: <strong>10 學分</strong>，需達到修課門檻才能進行</li>
+      </ul>
+    </div>
+
+    <!-- 心靈提醒 -->
+    <div class="card p-4 mb-5">
+      <h2 class="section-title">🌿 心靈提醒與鼓勵</h2>
+      <div class="note-box">
+        <strong>1. 你不是懶惰 — 你只是背負了太多意義</strong><br />
+        你關心家人、未來和自己的成長，這些重量是真實的，而你能背負它們已經很堅強。<br /><br />
+        <strong>2. 罪惡感 ≠ 成長</strong><br />
+        提高效率和運用工具是解放自己，不是作弊。你仍然是思考者和決策者。<br /><br />
+        <strong>3. 療癒是循環的，不是直線的</strong><br />
+        在成長階段感到卡住或孤獨是正常的。你正在重建你的未來 — 每一步都很重要。<br /><br />
+        <em>心靈咒語: "我還沒到達我想去的地方，但我正用心走著，這已經足夠了。"</em>
+      </div>
+      <div class="note-box">
+        <strong>4. 從小處開始，建立習慣</strong><br />
+        每週從1-2項任務開始。慶祝小勝利。動力會逐漸增長。<br /><br />
+        <strong>5. 尋求幫助與反思</strong><br />
+        當感到不知所措時，與信任的朋友或導師交談。寫日記或在此處談談都是好方法。<br /><br />
+        <em>"一天一天來，一次一項任務，一次一個呼吸。"</em>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+  <script>
+    // 主課程清單 - 所有課程定義在此
+    const masterCourseList = [
+      { title: "Computer Architecture and Operating Systems", code: "DLBCSCAOS01", credit: 5, type: "core" },
+      { title: "Data Structures and Java Class Library", code: "DLBCSDSJCL01", credit: 5, type: "core" },
+      { title: "Introduction to Academic Work", code: "DLBCSIAW01", credit: 5, type: "core" },
+      { title: "Introduction to Computer Science", code: "DLBCSICS01", credit: 5, type: "core" },
+      { title: "Intercultural and Ethical Decision-Making", code: "DLBCSIDM01", credit: 5, type: "core" },
+      { title: "Mathematics I", code: "DLBCSM101", credit: 5, type: "core" },
+      { title: "Mathematics II", code: "DLBCSM201", credit: 5, type: "core" },
+      { title: "Object-oriented Programming with Java", code: "DLBCSOOPJ01", credit: 5, type: "core" },
+      { title: "Web Application Development", code: "DLBCSWAD01", credit: 5, type: "core" },
+      { title: "Cryptography", credit: 5, type: "core" },
+      { title: "Project: Build a Data Mart in SQL", credit: 5, type: "core" },
+      { title: "IT Law", credit: 5, type: "core" },
+      { title: "Project: Java and Web Development", credit: 5, type: "core" },
+      { title: "Project: Software Engineering", credit: 5, type: "core" },
+      { title: "Agile Project Management Model Engineering", credit: 5, type: "core" },
+      { title: "Project: IT Service Management", credit: 5, type: "core" },
+      { title: "Seminar: Current Topics in Computer Science", credit: 5, type: "core" },
+      { title: "Bachelor Thesis", credit: 9, type: "core" },
+      { title: "Colloquium", credit: 1, type: "core" },
+
+      { title: "Theoretical Computer Science and Mathematical Logic", credit: 5, type: "exam" },
+      { title: "Statistics - Probability and Descriptive Statistics", credit: 5, type: "exam" },
+      { title: "Requirements Engineering", credit: 5, type: "exam" },
+      { title: "Specification", credit: 5, type: "exam" },
+      { title: "Database Modeling and Database Systems", credit: 5, type: "exam" },
+      { title: "IT Service Management", credit: 5, type: "exam" },
+      { title: "Software Quality Assurance", credit: 5, type: "exam" },
+      { title: "Introduction to Programming with Python", credit: 5, type: "exam" },
+      { title: "Computer Networks and Distributed Systems", credit: 5, type: "read" },
+      { title: "Introduction to Data Protection and IT Security", credit: 5, type: "read" },
+      { title: "Computer Science and Society", credit: 5, type: "read" },
+      { title: "Collaborative Work @Easy", credit: 5, type: "read" },
+      { title: "Algorithms, Data Structures and Programming Languages", credit: 5, type: "waiting" },
+      { title: "EA1 (Elective)", credit: 5, type: "elective" },
+      { title: "EA2 (Elective)", credit: 5, type: "elective" },
+      { title: "EB1 (Elective)", credit: 5, type: "elective" },
+      { title: "EB2 (Elective)", credit: 5, type: "elective" }
+    ];
+
+    // 預設空分類
+    const defaultCategories = {
+      "0. 已完成": [],
+      "1. (作業)待完成課程": [],
+      "1.5 (作業)閱讀中":[],
+      "2. (作業)製作中": [],
+      "3. (作業)等待成績": [],
+      "4. (考試)待考科目": [],
+      "5. (考試)閱讀中": [],
+      "6. (考試)準備中": [],
+      "7. (考試)等待結果": [],
+      "8. 選修課程": [],
+      "9. 畢業論文":[]
+    };
+
+    // 用主課程清單初始化
+    function initializeCourses() {
+      const initialized = JSON.parse(JSON.stringify(defaultCategories));
+      
+      masterCourseList.forEach(course => {
+        const courseCopy = JSON.parse(JSON.stringify(course));
+        courseCopy.completed = false;
+        
+        if (course.type === "elective") {
+          initialized["8. 選修課程"].push(courseCopy);
+        } else if (course.type === "exam") {
+          initialized["4. (考試)待考科目"].push(courseCopy);
+        } else if (course.type === "read") {
+          initialized["5. (考試)閱讀中"].push(courseCopy);
+        } else if (course.type === "waiting") {
+          initialized["7. (考試)等待結果"].push(courseCopy);
+        } else {
+          initialized["1. (作業)待完成課程"].push(courseCopy);
+        }
+      });
+      
+      return initialized;
+    }
+
+    // 從本地存儲加載或初始化
+    let coursesByCategory = JSON.parse(localStorage.getItem('studyPlanCourses')) || initializeCourses();
+
+    function saveToLocalStorage() {
+      localStorage.setItem('studyPlanCourses', JSON.stringify(coursesByCategory));
+    }
+
+    // 匯出資料
+    function exportData() {
+      const data = JSON.stringify(coursesByCategory, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '學習進度備份.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // 匯入資料
+    function importData(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data && typeof data === 'object') {
+            coursesByCategory = data;
+            saveToLocalStorage();
+            renderCourses();
+            updateProgressBar();
+            alert('資料匯入成功！');
+          } else {
+            alert('檔案格式無效');
+          }
+        } catch (err) {
+          alert('解析檔案錯誤: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // 渲染課程
+    function renderCourses() {
+      const container = $("#coursesByCategory");
+      container.empty();
+
+      Object.entries(coursesByCategory).forEach(([category, courses], catIndex) => {
+        const categoryDiv = $(`<div class="category-section category-${catIndex}" data-category="${category}"></div>`);
+        
+        // 分類標題與學分計算
+        const credits = courses.reduce((sum, course) => sum + course.credit, 0);
+        const header = $(`
+          <div class="category-header">
+            <h3 class="category-title">${category}</h3>
+            <span class="category-credits">${credits} 學分</span>
+          </div>
+        `);
+        categoryDiv.append(header);
+
+        if (courses.length === 0) {
+          categoryDiv.append('<div class="text-muted">(無課程)</div>');
+        } else {
+          courses.forEach((course, idx) => {
+            const completedClass = course.completed ? "completed" : "";
+            const courseDiv = $(`
+              <div class="course-item ${completedClass}" 
+                   data-category="${category}" 
+                   data-index="${idx}"
+                   draggable="true">
+                <strong>${course.title}</strong> 
+                <small>(${course.credit} 學分${course.code ? ' - ' + course.code : ''})</small>
+              </div>
+            `);
+            categoryDiv.append(courseDiv);
+          });
+        }
+
+        container.append(categoryDiv);
+      });
+    }
+
+    // 更新進度條
+    function updateProgressBar() {
+      const totalCP = 180;
+      let completedCP = 0;
+      
+      if (coursesByCategory["0. 已完成"]) {
+        coursesByCategory["0. 已完成"].forEach(course => {
+          completedCP += course.credit;
+        });
+      }
+      
+      const percent = Math.min(100, (completedCP / totalCP) * 100);
+
+      const bar = $("#degreeProgressBar");
+      bar.css("width", percent + "%");
+      bar.attr("aria-valuenow", completedCP);
+      bar.text(`${completedCP} / ${totalCP} 學分`);
+    }
+
+    // 設置拖放功能
+    function setupDragAndDrop() {
+      let draggedItem = null;
+      let sourceCategory = null;
+
+      $(document).on('dragstart', '.course-item', function(e) {
+        draggedItem = this;
+        sourceCategory = $(this).parent().data('category');
+        $(this).addClass('dragging');
+        e.originalEvent.dataTransfer.setData('text/plain', '');
+      });
+
+      $(document).on('dragend', '.course-item', function() {
+        $(this).removeClass('dragging');
+        $('.category-section').removeClass('highlight');
+      });
+
+      $(document).on('dragover', '.category-section', function(e) {
+        e.preventDefault();
+        $('.category-section').removeClass('highlight');
+        $(this).addClass('highlight');
+      });
+
+      $(document).on('drop', '.category-section', function(e) {
+        e.preventDefault();
+        $(this).removeClass('highlight');
+        
+        if (draggedItem) {
+          const targetCategory = $(this).data('category');
+          const courseIndex = $(draggedItem).data('index');
+          const course = coursesByCategory[sourceCategory][courseIndex];
+          
+          // 從原分類移除
+          coursesByCategory[sourceCategory].splice(courseIndex, 1);
+          
+          // 添加到新分類
+          coursesByCategory[targetCategory].push(course);
+          
+          // 更新完成狀態
+          course.completed = (targetCategory === "0. 已完成");
+          
+          saveToLocalStorage();
+          renderCourses();
+          updateProgressBar();
+        }
+      });
+    }
+
+    // 頁面載入
+    $(document).ready(() => {
+      renderCourses();
+      updateProgressBar();
+      setupDragAndDrop();
+
+      // 重設進度按鈕
+      $("#resetProgress").click(function() {
+        if (confirm("確定要重設所有進度嗎？此操作無法復原。")) {
+          coursesByCategory = initializeCourses();
+          saveToLocalStorage();
+          renderCourses();
+          updateProgressBar();
+        }
+      });
+
+      // 匯出按鈕
+      $("#exportData").click(exportData);
+      
+      // 匯入按鈕
+      $("#importData").click(function() {
+        $("#fileInput").click();
+      });
+      
+      $("#fileInput").change(function(e) {
+        if (e.target.files.length) {
+          importData(e.target.files[0]);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

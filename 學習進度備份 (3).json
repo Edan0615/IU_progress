@@ -1,0 +1,248 @@
+{
+  "0. 已完成": [
+    {
+      "title": "Computer Architecture and Operating Systems",
+      "code": "DLBCSCAOS01",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    },
+    {
+      "title": "Data Structures and Java Class Library",
+      "code": "DLBCSDSJCL01",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    },
+    {
+      "title": "Introduction to Academic Work",
+      "code": "DLBCSIAW01",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    },
+    {
+      "title": "Introduction to Computer Science",
+      "code": "DLBCSICS01",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    },
+    {
+      "title": "Intercultural and Ethical Decision-Making",
+      "code": "DLBCSIDM01",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    },
+    {
+      "title": "Mathematics I",
+      "code": "DLBCSM101",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    },
+    {
+      "title": "Mathematics II",
+      "code": "DLBCSM201",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    },
+    {
+      "title": "Object-oriented Programming with Java",
+      "code": "DLBCSOOPJ01",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    },
+    {
+      "title": "Web Application Development",
+      "code": "DLBCSWAD01",
+      "credit": 5,
+      "type": "core",
+      "completed": true
+    }
+  ],
+  "1. (作業)待完成課程": [
+    {
+      "title": "Project: Build a Data Mart in SQL",
+      "credit": 5,
+      "type": "core",
+      "completed": false
+    },
+    {
+      "title": "IT Law",
+      "credit": 5,
+      "type": "core",
+      "completed": false
+    },
+    {
+      "title": "Project: Software Engineering",
+      "credit": 5,
+      "type": "core",
+      "completed": false
+    },
+    {
+      "title": "Agile Project Management Model Engineering",
+      "credit": 5,
+      "type": "core",
+      "completed": false
+    },
+    {
+      "title": "Project: IT Service Management",
+      "credit": 5,
+      "type": "core",
+      "completed": false
+    },
+    {
+      "title": "Seminar: Current Topics in Computer Science",
+      "credit": 5,
+      "type": "core",
+      "completed": false
+    }
+  ],
+  "1.5 (作業)閱讀中": [
+    {
+      "title": "Cryptography",
+      "credit": 5,
+      "type": "core",
+      "completed": false
+    },
+    {
+      "title": "Project: Java and Web Development",
+      "credit": 5,
+      "type": "core",
+      "completed": false
+    }
+  ],
+  "2. (作業)製作中": [
+    {
+      "title": "Collaborative Work @Easy",
+      "credit": 5,
+      "type": "read",
+      "completed": false
+    },
+    {
+      "title": "Computer Science and Society",
+      "credit": 5,
+      "type": "read",
+      "completed": false
+    }
+  ],
+  "3. (作業)等待成績": [
+    {
+      "title": "Algorithms, Data Structures and Programming Languages",
+      "credit": 5,
+      "type": "waiting",
+      "completed": false
+    }
+  ],
+  "4. (考試)待考科目": [
+    {
+      "title": "Theoretical Computer Science and Mathematical Logic",
+      "credit": 5,
+      "type": "exam",
+      "completed": false
+    },
+    {
+      "title": "Statistics - Probability and Descriptive Statistics",
+      "credit": 5,
+      "type": "exam",
+      "completed": false
+    },
+    {
+      "title": "Requirements Engineering",
+      "credit": 5,
+      "type": "exam",
+      "completed": false
+    },
+    {
+      "title": "Specification",
+      "credit": 5,
+      "type": "exam",
+      "completed": false
+    },
+    {
+      "title": "Database Modeling and Database Systems",
+      "credit": 5,
+      "type": "exam",
+      "completed": false
+    },
+    {
+      "title": "IT Service Management",
+      "credit": 5,
+      "type": "exam",
+      "completed": false
+    },
+    {
+      "title": "Software Quality Assurance",
+      "credit": 5,
+      "type": "exam",
+      "completed": false
+    },
+    {
+      "title": "Introduction to Programming with Python",
+      "credit": 5,
+      "type": "exam",
+      "completed": false
+    }
+  ],
+  "5. (考試)閱讀中": [
+    {
+      "title": "Computer Networks and Distributed Systems",
+      "credit": 5,
+      "type": "read",
+      "completed": false
+    }
+  ],
+  "6. (考試)準備中": [
+    {
+      "title": "Introduction to Data Protection and IT Security",
+      "credit": 5,
+      "type": "read",
+      "completed": false
+    }
+  ],
+  "7. (考試)等待結果": [],
+  "8. 選修課程": [
+    {
+      "title": "EA1 (Elective)",
+      "credit": 5,
+      "type": "elective",
+      "completed": false
+    },
+    {
+      "title": "EA2 (Elective)",
+      "credit": 5,
+      "type": "elective",
+      "completed": false
+    },
+    {
+      "title": "EB1 (Elective)",
+      "credit": 5,
+      "type": "elective",
+      "completed": false
+    },
+    {
+      "title": "EB2 (Elective)",
+      "credit": 5,
+      "type": "elective",
+      "completed": false
+    }
+  ],
+  "9. 畢業論文": [
+    {
+      "title": "Bachelor Thesis",
+      "credit": 9,
+      "type": "core",
+      "completed": false
+    },
+    {
+      "title": "Colloquium",
+      "credit": 1,
+      "type": "core",
+      "completed": false
+    }
+  ]
+}
