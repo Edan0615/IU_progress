@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Edan's 學習進度追蹤系統</title>
+  <title>IU Degree Tracking System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     body {
@@ -111,11 +111,11 @@
 </head>
 <body>
   <div class="container py-4">
-    <h1 class="text-center mb-4 text-warning">📘 Edan's 學習進度追蹤系統</h1>
+    <h1 class="text-center mb-4 text-warning fw-bold">IU Degree Tracking System</h1>
 
     <!-- 進度條 -->
     <div class="card p-4 mb-4">
-      <h2 class="section-title">🎯 學位進度 (總需 180 學分)</h2>
+      <h2 class="section-title">🎯 Degree Progress (180 CPs needed)</h2>
       <div class="progress" style="height: 30px;">
         <div id="degreeProgressBar" 
              class="progress-bar progress-bar-striped progress-bar-animated bg-warning" 
@@ -125,50 +125,46 @@
           0 / 180 學分
         </div>
       </div>
-      <small class="text-muted mt-2 d-block">拖曳課程到「已完成」區域來更新進度</small>
-      <button id="resetProgress" class="btn btn-sm btn-outline-danger reset-btn">重設所有進度</button>
-      <button id="exportData" class="btn btn-sm btn-outline-primary ms-2">匯出資料</button>
-      <button id="importData" class="btn btn-sm btn-outline-success ms-2">匯入資料</button>
+      <small class="text-muted mt-2 d-block">Drag courses to "completed" to up date the over all progress</small>
+      <div class="row justify-content-center aling-items-center">
+        <div class="col-3">
+                <button id="resetProgress" class="w-100 btn  btn-outline-warning rounded-pill">Reset Progress</button>
+
+        </div>
+        <div class="col-3">
+                <button id="exportData" class="w-100 btn  btn-outline-warning ms-2 rounded-pill">Export Progress</button>
+
+        </div>
+        <div class="col-3">      
+          <button id="importData" class="w-100 btn  btn-outline-warning ms-2 rounded-pill">Import Progress</button>
+        </div>
+      </div>
       <input type="file" id="fileInput" style="display: none;" accept=".json">
     </div>
 
     <!-- 課程區塊 -->
     <div class="card p-4 mb-4">
-      <h2 class="section-title">📚 課程進度管理 (拖曳重新分類)</h2>
+      <h2 class="section-title">📚 Progress Management(Drg and drop to organize)</h2>
       <div id="coursesByCategory" class="courses-container"></div>
 
-      <h5>注意事項:</h5>
+      <h5>Reminders:</h5>
       <ul>
-        <li>總學分需求: <strong>180 學分</strong></li>
-        <li>一般課程: 通常 <strong>5 學分/門</strong></li>
-        <li>選修課程: 需完成4門，通常5學分/門 (共20學分)</li>
-        <li>畢業論文: <strong>10 學分</strong>，需達到修課門檻才能進行</li>
+        <li>All Credits Points (CPs) needed: <strong>180 CPs</strong></li>
+        <li>Typical courses weight: <strong>5 CPs</strong></li>
+        <li>Elective: 2 electives (4 courses) should be completed </li>
+        <li>Thesis: <strong>10 CP</strong>(Thesis:9 CPs , Colloquium:1 CP)</li>
+        <li>Please make sure to export and import data, because currently this is just a front-end little project that I built for myself to track.</li>
       </ul>
     </div>
 
-    <!-- 心靈提醒 -->
-    <div class="card p-4 mb-5">
-      <h2 class="section-title">🌿 心靈提醒與鼓勵</h2>
-      <div class="note-box">
-        <strong>1. 你不是懶惰 — 你只是背負了太多意義</strong><br />
-        你關心家人、未來和自己的成長，這些重量是真實的，而你能背負它們已經很堅強。<br /><br />
-        <strong>2. 罪惡感 ≠ 成長</strong><br />
-        提高效率和運用工具是解放自己，不是作弊。你仍然是思考者和決策者。<br /><br />
-        <strong>3. 療癒是循環的，不是直線的</strong><br />
-        在成長階段感到卡住或孤獨是正常的。你正在重建你的未來 — 每一步都很重要。<br /><br />
-        <em>心靈咒語: "我還沒到達我想去的地方，但我正用心走著，這已經足夠了。"</em>
-      </div>
-      <div class="note-box">
-        <strong>4. 從小處開始，建立習慣</strong><br />
-        每週從1-2項任務開始。慶祝小勝利。動力會逐漸增長。<br /><br />
-        <strong>5. 尋求幫助與反思</strong><br />
-        當感到不知所措時，與信任的朋友或導師交談。寫日記或在此處談談都是好方法。<br /><br />
-        <em>"一天一天來，一次一項任務，一次一個呼吸。"</em>
-      </div>
-    </div>
+    
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+  <footer class="text-center">
+    <a href="https://bearbei.com" target="_blank" class="text-warning fw-bold">Check out if this cute teddy bear flashcard is helpful to you!~</a>
+  </footer>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
   <script>
     // 主課程清單 - 所有課程定義在此
     const masterCourseList = [
@@ -213,17 +209,17 @@
 
     // 預設空分類
     const defaultCategories = {
-      "0. 已完成": [],
-      "1. (作業)待完成課程": [],
-      "1.5 (作業)閱讀中":[],
-      "2. (作業)製作中": [],
-      "3. (作業)等待成績": [],
-      "4. (考試)待考科目": [],
-      "5. (考試)閱讀中": [],
-      "6. (考試)準備中": [],
-      "7. (考試)等待結果": [],
-      "8. 選修課程": [],
-      "9. 畢業論文":[]
+      "0. Completed": [],
+      "1. (HW/Proj)Courses Left": [],
+      "1.5 (HW/Proj)Studying":[],
+      "2. (HW/Proj)Making": [],
+      "3. (HW/Proj)Waiting for the result": [],
+      "4. (Exam)Courses Left": [],
+      "5. (Exam)Studying": [],
+      "6. (Exam)Preparing for the exam": [],
+      "7. (Exam)Waiting for the result": [],
+      "8. Electives": [],
+      "9. Thesis":[]
     };
 
     // 用主課程清單初始化
@@ -235,15 +231,15 @@
         courseCopy.completed = false;
         
         if (course.type === "elective") {
-          initialized["8. 選修課程"].push(courseCopy);
+          initialized["8. Electives"].push(courseCopy);
         } else if (course.type === "exam") {
-          initialized["4. (考試)待考科目"].push(courseCopy);
+          initialized["4. (Exam)Courses Left"].push(courseCopy);
         } else if (course.type === "read") {
-          initialized["5. (考試)閱讀中"].push(courseCopy);
+          initialized["5. (Exam)Studying"].push(courseCopy);
         } else if (course.type === "waiting") {
-          initialized["7. (考試)等待結果"].push(courseCopy);
+          initialized["7. (Exam)Waiting for the result"].push(courseCopy);
         } else {
-          initialized["1. (作業)待完成課程"].push(courseCopy);
+          initialized["1. (HW/Proj)Courses Left"].push(courseCopy);
         }
       });
       
@@ -306,13 +302,13 @@
         const header = $(`
           <div class="category-header">
             <h3 class="category-title">${category}</h3>
-            <span class="category-credits">${credits} 學分</span>
+            <span class="category-credits">${credits} CPs</span>
           </div>
         `);
         categoryDiv.append(header);
 
         if (courses.length === 0) {
-          categoryDiv.append('<div class="text-muted">(無課程)</div>');
+          categoryDiv.append('<div class="text-muted">(No Course)</div>');
         } else {
           courses.forEach((course, idx) => {
             const completedClass = course.completed ? "completed" : "";
@@ -338,8 +334,8 @@
       const totalCP = 180;
       let completedCP = 0;
       
-      if (coursesByCategory["0. 已完成"]) {
-        coursesByCategory["0. 已完成"].forEach(course => {
+      if (coursesByCategory["0. Completed"]) {
+        coursesByCategory["0. Completed"].forEach(course => {
           completedCP += course.credit;
         });
       }
@@ -431,5 +427,4 @@
       });
     });
   </script>
-</body>
 </html>

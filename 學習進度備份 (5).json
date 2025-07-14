@@ -1,5 +1,5 @@
 {
-  "0. 已完成": [
+  "0. Completed": [
     {
       "title": "Computer Architecture and Operating Systems",
       "code": "DLBCSCAOS01",
@@ -64,7 +64,7 @@
       "completed": true
     }
   ],
-  "1. (作業)待完成課程": [
+  "1. (HW/Proj)Courses Left": [
     {
       "title": "Project: Build a Data Mart in SQL",
       "credit": 5,
@@ -102,7 +102,7 @@
       "completed": false
     }
   ],
-  "1.5 (作業)閱讀中": [
+  "1.5 (HW/Proj)Studying": [
     {
       "title": "Cryptography",
       "credit": 5,
@@ -116,7 +116,7 @@
       "completed": false
     }
   ],
-  "2. (作業)製作中": [
+  "2. (HW/Proj)Making": [
     {
       "title": "Collaborative Work @Easy",
       "credit": 5,
@@ -130,7 +130,7 @@
       "completed": false
     }
   ],
-  "3. (作業)等待成績": [
+  "3. (HW/Proj)Waiting for the result": [
     {
       "title": "Algorithms, Data Structures and Programming Languages",
       "credit": 5,
@@ -138,7 +138,7 @@
       "completed": false
     }
   ],
-  "4. (考試)待考科目": [
+  "4. (Exam)Courses Left": [
     {
       "title": "Theoretical Computer Science and Mathematical Logic",
       "credit": 5,
@@ -188,7 +188,7 @@
       "completed": false
     }
   ],
-  "5. (考試)閱讀中": [
+  "5. (Exam)Studying": [
     {
       "title": "Computer Networks and Distributed Systems",
       "credit": 5,
@@ -196,7 +196,7 @@
       "completed": false
     }
   ],
-  "6. (考試)準備中": [
+  "6. (Exam)Preparing for the exam": [
     {
       "title": "Introduction to Data Protection and IT Security",
       "credit": 5,
@@ -204,8 +204,8 @@
       "completed": false
     }
   ],
-  "7. (考試)等待結果": [],
-  "8. 選修課程": [
+  "7. (Exam)Waiting for the result": [],
+  "8. Electives": [
     {
       "title": "EA1 (Elective)",
       "credit": 5,
@@ -231,7 +231,7 @@
       "completed": false
     }
   ],
-  "9. 畢業論文": [
+  "9. Thesis": [
     {
       "title": "Bachelor Thesis",
       "credit": 9,
