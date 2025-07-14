@@ -111,7 +111,7 @@
 </head>
 <body>
   <div class="container py-4">
-    <h1 class="text-center mb-4 text-warning fw-bold">IU Degree Tracking System</h1>
+    <h1 class="text-center mb-4 text-warning fw-bold">IU BSc CS Degree Tracking System</h1>
 
     <!-- 進度條 -->
     <div class="card p-4 mb-4">
@@ -122,10 +122,10 @@
              role="progressbar" 
              style="width: 0%"
              aria-valuenow="0" aria-valuemin="0" aria-valuemax="180">
-          0 / 180 學分
+          0 / 180 CPs
         </div>
       </div>
-      <small class="text-muted mt-2 d-block">Drag courses to "completed" to up date the over all progress</small>
+      <small class="text-muted mt-2 d-block">Drag courses to "completed" to update the over all progress</small>
       <div class="row justify-content-center aling-items-center">
         <div class="col-3">
                 <button id="resetProgress" class="w-100 btn  btn-outline-warning rounded-pill">Reset Progress</button>
@@ -144,7 +144,7 @@
 
     <!-- 課程區塊 -->
     <div class="card p-4 mb-4">
-      <h2 class="section-title">📚 Progress Management(Drg and drop to organize)</h2>
+      <h2 class="section-title">📚 Progress Manager(Drg and drop to organize)</h2>
       <div id="coursesByCategory" class="courses-container"></div>
 
       <h5>Reminders:</h5>
@@ -255,12 +255,15 @@
 
     // 匯出資料
     function exportData() {
+      const date = new Date();
+      const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}-${String(date.getHours()).padStart(2, '0')}-${String(date.getMinutes()).padStart(2, '0')}`;
+
       const data = JSON.stringify(coursesByCategory, null, 2);
       const blob = new Blob([data], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = '學習進度備份.json';
+      a.download = `${formattedDate}_Progress_Backup.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -278,12 +281,12 @@
             saveToLocalStorage();
             renderCourses();
             updateProgressBar();
-            alert('資料匯入成功！');
+            alert('Import successfully');
           } else {
-            alert('檔案格式無效');
+            alert('Fail to inmport');
           }
         } catch (err) {
-          alert('解析檔案錯誤: ' + err.message);
+          alert('Error: ' + err.message);
         }
       };
       reader.readAsText(file);
@@ -318,7 +321,7 @@
                    data-index="${idx}"
                    draggable="true">
                 <strong>${course.title}</strong> 
-                <small>(${course.credit} 學分${course.code ? ' - ' + course.code : ''})</small>
+                <small>(${course.credit} CPs${course.code ? ' - ' + course.code : ''})</small>
               </div>
             `);
             categoryDiv.append(courseDiv);
@@ -345,7 +348,7 @@
       const bar = $("#degreeProgressBar");
       bar.css("width", percent + "%");
       bar.attr("aria-valuenow", completedCP);
-      bar.text(`${completedCP} / ${totalCP} 學分`);
+      bar.text(`${completedCP} / ${totalCP} CPs`);
     }
 
     // 設置拖放功能
@@ -387,7 +390,7 @@
           coursesByCategory[targetCategory].push(course);
           
           // 更新完成狀態
-          course.completed = (targetCategory === "0. 已完成");
+          course.completed = (targetCategory === "0. Completed");
           
           saveToLocalStorage();
           renderCourses();
@@ -404,7 +407,7 @@
 
       // 重設進度按鈕
       $("#resetProgress").click(function() {
-        if (confirm("確定要重設所有進度嗎？此操作無法復原。")) {
+        if (confirm("Are you sure to reset you progress?")) {
           coursesByCategory = initializeCourses();
           saveToLocalStorage();
           renderCourses();
